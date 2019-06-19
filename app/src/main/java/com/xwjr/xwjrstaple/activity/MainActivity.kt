@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         stapleHelper = StapleHttpHelper(this)
 
-        AuthManager.getIDCardLicense(this)
+//        AuthManager.getIDCardLicense(this)
         AuthManager.getLivingLicense(this)
         tv_queryRiskShieldData.setOnClickListener {
             authManagerHelper.queryRiskShieldStep(true)

@@ -51,6 +51,8 @@ object AuthManager {
                 if (code > 0) {
                     deal()
                     idCardLicense = true
+                    if (!livingLicense)
+                        getLivingLicense(context)
                     logI("身份证识别联网授权 OK")
                 } else {
                     logI("身份证识别联网授权 False --  code:$code")
@@ -176,6 +178,8 @@ object AuthManager {
                 val code = licenseManager.checkCachedLicense()
                 livingLicense = if (code > 0) {
                     deal()
+                    if (!idCardLicense)
+                        getIDCardLicense(context)
                     logI("活体检测联网授权 OK")
                     true
                 } else {
