@@ -2,7 +2,10 @@ package com.xwjr.staple.extension
 
 import android.app.ActivityManager
 import android.app.AppOpsManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import java.lang.reflect.InvocationTargetException
 
@@ -83,7 +86,7 @@ fun Context.setTopApp() {
             }
         }
 //    }
-    }catch (e:Exception){
+    } catch (e: Exception) {
         logE("将应用进程置顶时发生异常")
         e.printStackTrace()
     }
@@ -112,5 +115,51 @@ fun Context.isRunningForeground(): Boolean {
     return false
 }
 
+/**
+ * 注册广播
+ */
+fun Context.registerBroadcast(action: String, deal: ((intent: Intent) -> Unit)? = null): BroadcastReceiver {
+    val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            try {
+                if (deal != null) deal(intent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    try {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(action)
+        registerReceiver(receiver, intentFilter)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return receiver
+
+}
+
+/**
+ * 取消注册广播
+ */
+fun Context.unRegisterBroadcast(receiver: BroadcastReceiver) {
+    try {
+        unregisterReceiver(receiver)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
+/**
+ * 发送广播
+ */
+fun Context.sendBroadcast(action: String, intent: Intent) {
+    try {
+        intent.action = action
+        sendBroadcast(intent)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
 
 

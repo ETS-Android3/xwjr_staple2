@@ -1,13 +1,12 @@
 package com.xwjr.xwjrstaple.activity
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.xwjr.staple.extension.laterDeal
-import com.xwjr.staple.extension.logI
-import com.xwjr.staple.extension.showToast
+import com.xwjr.staple.extension.*
 import com.xwjr.staple.fragment.ProgressDialogFragment
 import com.xwjr.staple.jwt.JWTUtils
 import com.xwjr.staple.manager.AuthManager
@@ -23,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var stapleHelper: StapleHttpHelper? = null
     private var captchaToken = ""
     private val authManagerHelper = AuthManagerHelper(this)
-
+    private var refreshBroadcast: BroadcastReceiver? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,9 +46,9 @@ class MainActivity : AppCompatActivity() {
             AuthManager.startLivingDetect(this)
         }
         tv_jwt.setOnClickListener {
-            val dataMap = HashMap<String,String>()
+            val dataMap = HashMap<String, String>()
             dataMap["name"] = "吕正志"
-            logI(JWTUtils.getToken(JWTUtils.getKey(JWTUtils.FKZX),"{\"name\":\"吕正志\"}"))
+            logI(JWTUtils.getToken(JWTUtils.getKey(JWTUtils.FKZX), "{\"name\":\"吕正志\"}"))
         }
         tv_captcha.setOnClickListener {
             stapleHelper?.getCaptchaData(true)
@@ -70,7 +69,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         tv_fileReader.setOnClickListener {
-            startActivity(Intent(this@MainActivity,FileReaderActivity::class.java))
+            startActivity(Intent(this@MainActivity, FileReaderActivity::class.java))
+        }
+
+        tv_broadcast.setOnClickListener {
+           refreshBroadcast = registerBroadcast("changeName") { intent ->
+                val name = intent.getStringExtra("name")
+                tv_broadcast.text = name
+            }
+            startActivity(Intent(this@MainActivity, BroadcastActivity::class.java))
         }
 
         stapleHelper?.addCaptchaListener(object : StapleHttpHelper.CaptchaListener {
@@ -125,5 +132,11 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
+    }
+
+    override fun onDestroy() {
+        if (refreshBroadcast != null)
+            unRegisterBroadcast(refreshBroadcast!!)
+        super.onDestroy()
     }
 }
