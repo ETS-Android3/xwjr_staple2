@@ -1,5 +1,6 @@
 package com.xwjr.staple.extension
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.AppOpsManager
 import android.content.BroadcastReceiver
@@ -159,6 +160,31 @@ fun Context.sendBroadcast(action: String, intent: Intent) {
         sendBroadcast(intent)
     } catch (e: Exception) {
         e.printStackTrace()
+    }
+}
+
+//存取activity是否在后台运行， 0  是
+@SuppressLint("ApplySharedPref")
+fun Context.saveLocalData(key: String, value: String) {
+    try {
+        val sp = getSharedPreferences("StapleTable", Context.MODE_PRIVATE)
+        val editor = sp.edit()
+        editor.putString(key, value)
+        editor.commit()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
+}
+
+//获取activity是否在后台运行，
+fun Context.getLocalData(key: String): String? {
+    return try {
+        val sp = getSharedPreferences("StapleTable", Context.MODE_PRIVATE)
+        sp.getString(key, "")
+    } catch (e: Exception) {
+        e.printStackTrace()
+        ""
     }
 }
 

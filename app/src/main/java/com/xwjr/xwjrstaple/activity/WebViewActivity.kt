@@ -18,7 +18,7 @@ class WebViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_webview)
 
 //        webView.loadUrl("http://debugx5.qq.com")
-        webView.loadUrl("http://10.99.97.29:18080/wangwang/invite")
+        webView.loadUrl("http://xiaodai.xwjr.com/xwjrContract/api/getNetContract?applyId=D90101138194&system=GOLDCARD&protocolType=GUARANTEE")
 //        webView.loadUrl("http://www.baidu.com")
 //        webView.loadUrl("http://activity.m.duiba.com.cn/chome/index?from=login&spm=17959.1.1.1")
 //        webView.loadUrl("https://wxpay.wxutil.com/mch/pay/h5.v2.php")
