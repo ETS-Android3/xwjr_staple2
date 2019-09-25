@@ -68,21 +68,21 @@ object StapleHttpUrl {
      * 风控中心身份识别状态
      */
     fun queryRiskShieldStep():String{
-        return getRiskShieldBaseUrl() + "/riskshield/verify/steps/MYSELF/" +StapleConfig.getRiskShieldSource()
+        return getRiskShieldBaseUrl() + "/rsapi/verify/steps/MYSELF/" +StapleConfig.getRiskShieldSource()
     }
 
     /**
      * 上传身份证识别数据
      */
     fun upLoadIDCardInfo(): String {
-        return getRiskShieldBaseUrl() + "/riskshield/verify/ocrIdCard/MYSELF"
+        return getRiskShieldBaseUrl() + "/rsapi/verify/idCard/ocr/MYSELF"
     }
 
     /**
      * 上传活体识别数据
      */
     fun upLoadLiveInfo(): String {
-        return getRiskShieldBaseUrl() + "/riskshield/verify/faceId/MYSELF"
+        return getRiskShieldBaseUrl() + "/rsapi/verify/faceId/ocr/MYSELF"
     }
 
     /**

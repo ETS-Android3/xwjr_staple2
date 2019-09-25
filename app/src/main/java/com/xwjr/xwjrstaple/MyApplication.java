@@ -22,7 +22,7 @@ public class MyApplication extends Application {
         StapleConfig.INSTANCE.setAppSource(StapleConfig.XIAODAI);
         StapleConfig.INSTANCE.setDebug(true);
 
-        StapleUserTokenManager.INSTANCE.saveUserToken("b2d33e49dc8ad2f3055ae38b0769d2f94bb7d2701a1963687dffa9dad224acfb");
+        StapleUserTokenManager.INSTANCE.saveUserToken("da76fbfacbbf50d899a57a7bd3852a1861977de7939ce8c314ab41c62fb5a09c");
 
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);

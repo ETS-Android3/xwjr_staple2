@@ -36,6 +36,7 @@ android {
     lintOptions {
         disable 'GoogleAppIndexingWarning'
     }
+    buildToolsVersion '28.0.3'
 }
 
 allprojects {

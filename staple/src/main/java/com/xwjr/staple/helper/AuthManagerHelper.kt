@@ -186,7 +186,7 @@ class AuthManagerHelper(private val activity: AppCompatActivity) {
     /**
      * 上传活体识别数据
      */
-    fun upLoadLiveData(name: String, idNumber: String, delta: String, imgMap: MutableMap<String, String>, showProgress: Boolean = false) {
+    fun upLoadLiveData(name: String, idNumber: String, mobile: String, delta: String, imgMap: MutableMap<String, String>, showProgress: Boolean = false) {
         try {
             if (showProgress) {
                 dialog = ProgressDialogFragment.newInstance(hint = "正在识别...")
@@ -241,6 +241,7 @@ class AuthManagerHelper(private val activity: AppCompatActivity) {
             requestBody.addFormDataPart("name", name)
             requestBody.addFormDataPart("idNumber", idNumber)
             requestBody.addFormDataPart("delta", delta)
+            requestBody.addFormDataPart("mobile", mobile)
             logI("请求参数:'source':${StapleConfig.getRiskShieldSource()} 'name':$name  'idNumber':$idNumber 'delta':$delta")
 
 
