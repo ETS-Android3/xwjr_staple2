@@ -75,7 +75,7 @@ object StapleHttpUrl {
      * 上传身份证识别数据
      */
     fun upLoadIDCardInfo(): String {
-        return getRiskShieldBaseUrl() + "/rsapi/verify/idCard/ocr/MYSELF"
+        return getRiskShieldBaseUrl() + "/riskshield/verify/ocrIdCard/MYSELF"
     }
 
     /**
