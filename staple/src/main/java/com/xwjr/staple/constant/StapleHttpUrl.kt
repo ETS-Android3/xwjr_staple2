@@ -21,8 +21,7 @@ object StapleHttpUrl {
         return if (StapleConfig.isDebug) {
             "http://p2psp.kfxfd.cn:9080"
         } else {
-            //todo 调整域名
-            "http://xiaodai.xwjr.com"
+            "http://riskshield.xwjr.com"
         }
     }
 
