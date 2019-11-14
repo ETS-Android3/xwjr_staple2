@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import com.tencent.smtt.export.external.interfaces.ConsoleMessage;
+import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.sdk.CookieManager;
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
@@ -33,6 +34,13 @@ public class BridgeWebViewClient extends WebViewClient {
 
     public BridgeWebViewClient(BridgeWebView webView) {
         this.webView = webView;
+    }
+
+    @Override
+    public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
+        if (sslErrorHandler != null) {
+            sslErrorHandler.proceed();//忽略证书的错误继续加载页面内容，不会变成空白页面
+        }
     }
 
     @Override
