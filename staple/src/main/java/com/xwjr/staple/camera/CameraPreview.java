@@ -73,7 +73,7 @@ public class CameraPreview extends SurfaceView implements
 
 	// 在surface创建时激发
 	public void surfaceCreated(SurfaceHolder holder) {
-		Log.e(TAG, "==surfaceCreated==");
+		Log.i(TAG, "==surfaceCreated==");
 		if(!CameraUtils.checkCameraHardware(getContext())) {
 			Toast.makeText(getContext(), "摄像头打开失败！", Toast.LENGTH_SHORT).show();
 			return;
@@ -98,7 +98,7 @@ public class CameraPreview extends SurfaceView implements
 
 	// 在surface销毁时激发
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.e(TAG, "==surfaceDestroyed==");
+		Log.i(TAG, "==surfaceDestroyed==");
 		// 释放手机摄像头
 		camera.release();
 		camera = null;
