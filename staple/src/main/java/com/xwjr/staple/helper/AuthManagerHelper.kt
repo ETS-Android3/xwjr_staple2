@@ -294,6 +294,58 @@ class AuthManagerHelper(private val activity: AppCompatActivity) {
 
     }
 
+
+    /**
+     * 上传百度身份证数据
+     * owner : 0:本人 1:非本人
+     */
+    fun upLoadBaiduIDCardInfo(imagePath: String, owner: String = "0", side: String, showProgress: Boolean = false) {
+        try {
+            if (showProgress) {
+                dialog = ProgressDialogFragment.newInstance(hint = "身份证数据识别中...")
+                dialog?.show(activity.supportFragmentManager)
+            }
+            logI("开始上传身份证识别数据...")
+            val url = StapleHttpUrl.upLoadIDCardInfo() + "?channel=baidu"
+
+            val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+            val file = FileUtil.getFileByPath(imagePath)
+            val body = RequestBody.create(MediaType.parse("image/*"), file)
+            requestBody.addFormDataPart("image", file.name, body)
+            requestBody.addFormDataPart("source", StapleConfig.getRiskShieldSource())
+            requestBody.addFormDataPart("owner", owner)
+            requestBody.addFormDataPart("side", side)
+
+            logI("请求URL:$url  请求参数：{'image':$imagePath 'source':${StapleConfig.getRiskShieldSource()} 'owner':$owner}")
+
+            OkHttpClient().newCall(Request.Builder()
+                    .addHeader("Cookie", "ccat=" + StapleUserTokenManager.getUserToken())
+                    .url(url)
+                    .post(requestBody.build())
+                    .build()
+            ).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                    if (showProgress) dialog?.dismiss()
+                    logE("网络异常：上传身份证识别数据失败 $url")
+                    sendData("", "网络异常，上传身份证识别数据失败", -1)
+                    e.printStackTrace()
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (showProgress) dialog?.dismiss()
+                    val data = response.body()?.string().toString()
+                    sendData(url, data, 0)
+                }
+            })
+        } catch (e: Exception) {
+            if (showProgress) dialog?.dismiss()
+            logE("发生异常，身份证数据上传异常")
+            sendData("", "发生异常，身份证数据上传异常", -1)
+            e.printStackTrace()
+        }
+    }
+
     private var riskShieldData: RiskShieldData? = null
 
     interface RiskShieldData {

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.xwjr.staple.camera.TakePhotoActivity
 import com.xwjr.staple.extension.*
 import com.xwjr.staple.fragment.ProgressDialogFragment
 import com.xwjr.staple.jwt.JWTUtils
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private var captchaToken = ""
     private val authManagerHelper = AuthManagerHelper(this)
     private var refreshBroadcast: BroadcastReceiver? = null
+    private var filePath = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -73,11 +75,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         tv_broadcast.setOnClickListener {
-           refreshBroadcast = registerBroadcast("changeName") { intent ->
+            refreshBroadcast = registerBroadcast("changeName") { intent ->
                 val name = intent.getStringExtra("name")
                 tv_broadcast.text = name
             }
             startActivity(Intent(this@MainActivity, BroadcastActivity::class.java))
+        }
+
+        tv_baiduIdCardFront.setOnClickListener {
+            val intent = Intent(this, TakePhotoActivity::class.java)
+            intent.putExtra("side", "front")
+            startActivityForResult(intent, AuthManager.BAIDU_ID_FRONT)
+//            AuthManager.startCamera(this, AuthManager.BAIDU_ID_FRONT) {
+//                filePath = it
+//                ""
+//            }
+        }
+
+        tv_baiduIdCardBack.setOnClickListener {
+            val intent = Intent(this, TakePhotoActivity::class.java)
+            intent.putExtra("side", "back")
+            startActivityForResult(intent, AuthManager.BAIDU_ID_BACK)
+//            AuthManager.startCamera(this, AuthManager.BAIDU_ID_BACK) {
+//                filePath = it
+//                ""
+//            }
         }
 
         stapleHelper?.addCaptchaListener(object : StapleHttpHelper.CaptchaListener {
@@ -123,11 +145,34 @@ class MainActivity : AppCompatActivity() {
 
                     AuthManager.PAGE_INTO_LIVENESS -> {
                         AuthManager.dealLivingData(this, data!!) { imagesMap, _, delta ->
-                            authManagerHelper.upLoadLiveData("朱小航", "412326199211116919","18810409404", delta, imagesMap, true)
+                            authManagerHelper.upLoadLiveData("朱小航", "412326199211116919", "18810409404", delta, imagesMap, true)
+                        }
+                    }
+                    AuthManager.BAIDU_ID_FRONT -> {
+                        if (data == null) {
+                            return
+                        }
+                        AuthManager.dealBaiduIDCardScan(data.getStringExtra("filePath")) {
+                            authManagerHelper.upLoadBaiduIDCardInfo(
+                                    imagePath = it,
+                                    side = data.getStringExtra("side"),
+                                    showProgress = true
+                            )
+                        }
+                    }
+                    AuthManager.BAIDU_ID_BACK -> {
+                        if (data == null) {
+                            return
+                        }
+                        AuthManager.dealBaiduIDCardScan(filePath) {
+                            authManagerHelper.upLoadBaiduIDCardInfo(
+                                    imagePath = it,
+                                    side = data.getStringExtra("side"),
+                                    showProgress = true
+                            )
                         }
                     }
                 }
-
         } catch (e: Exception) {
             e.printStackTrace()
         }

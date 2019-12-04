@@ -54,10 +54,8 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setStatusBar()
         initX5Core()
-        dealPermission()
         logI("是否开启了通知权限：" + isNotificationEnabled())
-        queryUpdateInfo()
-        querySplashInfo()
+        dealPermission()
         setWindowBackground()
         AppStatusUtils.saveHaveActivityKilledStatus(this, "")
     }
@@ -99,14 +97,20 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         PermissionRequest.getInstance(this)?.requestPermission(object : PermissionListener {
             override fun permissionGranted() {
                 logI("permissionGranted")
+                queryUpdateInfo()
+                querySplashInfo()
             }
 
             override fun permissionDenied(permissions: ArrayList<String>?) {
                 logI("permissionDenied")
+                queryUpdateInfo()
+                querySplashInfo()
             }
 
             override fun permissionNeverAsk(permissions: ArrayList<String>?) {
                 logI("permissionNeverAsk")
+                queryUpdateInfo()
+                querySplashInfo()
             }
 
         }, permissions)

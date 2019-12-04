@@ -5,8 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import com.megvii.idcardlib.IDCardScanActivity
 import com.megvii.idcardlib.util.Util
 import com.megvii.idcardquality.IDCardQualityLicenseManager
@@ -14,16 +20,20 @@ import com.megvii.licensemanager.Manager
 import com.megvii.livenessdetection.LivenessLicenseManager
 import com.megvii.livenesslib.LivenessActivity
 import com.megvii.livenesslib.util.ConUtil
+import com.xwjr.staple.BuildConfig
 import com.xwjr.staple.constant.StapleConfig
 import com.xwjr.staple.extension.laterDeal
 import com.xwjr.staple.extension.logE
 import com.xwjr.staple.extension.logI
 import com.xwjr.staple.extension.showToast
+import com.xwjr.staple.permission.PermissionRequest
 import com.xwjr.staple.permission.PermissionUtils
+import com.xwjr.staple.util.BitmapUtil
 import com.xwjr.staple.util.FileUtil
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
+import java.util.ArrayList
 
 /**
  * 身份证识别，活体检测功能
@@ -32,6 +42,8 @@ object AuthManager {
 
     const val PAGE_INTO_IDCARDSCAN = 100
     const val PAGE_INTO_LIVENESS = 101
+    const val BAIDU_ID_FRONT = 1688
+    const val BAIDU_ID_BACK = 1689
 
     private var idCardLicense = false //身份证扫描联网授权
     private var livingLicense = false //活体检测联网授权
@@ -269,6 +281,99 @@ object AuthManager {
             e.printStackTrace()
         } catch (e: Exception) {
             showToast("活体检测验证数据处理失败")
+            e.printStackTrace()
+        }
+    }
+
+
+    /**
+     * 跳转到照相机
+     */
+    fun Context.gotoCamera(
+            activity: FragmentActivity,
+            requestCode: Int,
+            deal: (tempFile: File) -> Unit
+    ) {
+        //logI("*****************打开相机********************")
+        //创建拍照存储的图片文件
+        val tempFile = File(checkDirPath(StapleConfig.getImgFilePath()), System.currentTimeMillis().toString() + ".png")
+        if (tempFile == null) {
+            activity.showToast("没有获取到文件！")
+            return
+        }
+        //跳转到调用系统相机
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //设置7.0中共享文件，分享路径定义在xml/file_paths.xml
+            intent.flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            val contentUri = FileProvider.getUriForFile(
+                    activity,
+                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                    tempFile
+            )
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri)
+
+        } else {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile))
+        }
+        //logI( "**********startActivityForResult*******")
+
+        deal(tempFile)
+        activity.startActivityForResult(intent, requestCode)
+    }
+
+    /**
+     * 开启相机
+     */
+    fun startCamera(activity: FragmentActivity,
+                    requestCode: Int,
+                    deal: (filePath: String) -> Any) {
+        PermissionRequest.getInstance(activity).requestPermission(object : PermissionRequest.PermissionListener {
+            override fun permissionGranted() {
+                val fileName = System.currentTimeMillis().toString() + ".jpg"
+                val filePath = StapleConfig.getImgFilePath() + fileName
+                val file = File(filePath)
+                deal(filePath)
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                val uri = MyFileProvider.getUriForFile(activity, file)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+                activity.startActivityForResult(intent, requestCode)
+            }
+
+            override fun permissionDenied(permissions: ArrayList<String>?) {
+                activity.showToast("权限不足，请授权后使用")
+            }
+
+            override fun permissionNeverAsk(permissions: ArrayList<String>?) {
+                activity.showToast("权限不足，请授权后使用")
+            }
+        }, arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+    }
+
+    /**
+     * 检查文件是否存在
+     */
+    private fun checkDirPath(dirPath: String): String {
+        if (TextUtils.isEmpty(dirPath)) {
+            return ""
+        }
+        val dir = File(dirPath)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        return dirPath
+    }
+
+    /**
+     * 扫描身份证获取数据后处理
+     */
+    fun dealBaiduIDCardScan( path: String, deal: (filePath: String) -> Any) {
+        try {
+            BitmapUtil.getCompressFile(path).apply {
+                deal(this)
+            }
+        } catch (e: Exception) {
+            showToast(" 身份证数据处理异常")
             e.printStackTrace()
         }
     }
