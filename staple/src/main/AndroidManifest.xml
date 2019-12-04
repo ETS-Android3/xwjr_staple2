@@ -26,6 +26,7 @@
         </provider>
 
         <activity
-            android:name=".camera.TakePhotoActivity"/>
+            android:name=".camera.TakePhotoActivity"
+            android:screenOrientation="landscape" />
     </application>
 </manifest>

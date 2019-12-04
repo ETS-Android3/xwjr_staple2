@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.xwjr.staple.R;
 import com.xwjr.staple.constant.StapleConfig;
@@ -30,6 +32,9 @@ public class TakePhotoActivity extends AppCompatActivity implements CameraPrevie
     public static final String PATH = StapleConfig.INSTANCE.getImgFilePath();
     CameraPreview mCameraPreview;
     ImageView ivIndicator;
+    TextView tvHint;
+    TextView tvTakePhoto;
+    TextView tvCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +43,52 @@ public class TakePhotoActivity extends AppCompatActivity implements CameraPrevie
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.staple_activity_take_phote);
+        setContentView(R.layout.staple_activity_take_photo);
         // Initialize components of the app
         mCameraPreview = findViewById(R.id.cameraPreview);
         FocusView focusView = findViewById(R.id.view_focus);
         ivIndicator = findViewById(R.id.iv_indicator);
+        tvHint = findViewById(R.id.tv_hint);
+        tvTakePhoto = findViewById(R.id.tv_take_photo);
+        tvCancel = findViewById(R.id.tv_cancel_take_photo);
 
-        if (getIntent().getStringExtra("side").equals("front")) {
-            ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_takephoto_front));
-        } else {
-            ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_takephoto_back));
+
+        switch (getIntent().getStringExtra("source")) {
+            case "wwxjk":
+                if (getIntent().getStringExtra("side").equals("front")) {
+                    ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_idcard_front_wwxjk));
+                } else {
+                    ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_idcard_back_wwxjk));
+                }
+                tvHint.setTextColor(Color.parseColor("#f0c41b"));
+                tvTakePhoto.setBackgroundResource(R.drawable.staple_shape_solid_wwxjk);
+                tvCancel.setBackgroundResource(R.drawable.staple_shape_border_wwxjk);
+                tvCancel.setTextColor(Color.parseColor("#f0c41b"));
+                break;
+            case "xssq":
+                if (getIntent().getStringExtra("side").equals("front")) {
+                    ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_idcard_front_xssq));
+                } else {
+                    ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_idcard_back_xssq));
+                }
+                tvHint.setTextColor(Color.parseColor("#ff790d"));
+                tvTakePhoto.setBackgroundResource(R.drawable.staple_shape_solid_xssq);
+                tvCancel.setBackgroundResource(R.drawable.staple_shape_border_xssq);
+                tvCancel.setTextColor(Color.parseColor("#ff790d"));
+                break;
+            case "wwnt":
+                if (getIntent().getStringExtra("side").equals("front")) {
+                    ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_idcard_front_wwnt));
+                } else {
+                    ivIndicator.setImageDrawable(getResources().getDrawable(R.mipmap.staple_idcard_back_wwnt));
+                }
+                tvHint.setTextColor(Color.parseColor("#21cdb7"));
+                tvTakePhoto.setBackgroundResource(R.drawable.staple_shape_solid_wwnt);
+                tvCancel.setBackgroundResource(R.drawable.staple_shape_border_wwnt);
+                tvCancel.setTextColor(Color.parseColor("#21cdb7"));
+                break;
         }
+
 
         mCameraPreview.setFocusView(focusView);
         mCameraPreview.setOnCameraStatusListener(this);
@@ -57,6 +97,21 @@ public class TakePhotoActivity extends AppCompatActivity implements CameraPrevie
                 SENSOR_SERVICE);
         mAccel = mSensorManager.getDefaultSensor(Sensor.
                 TYPE_ACCELEROMETER);
+
+
+        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePhoto(v);
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

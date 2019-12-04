@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         tv_baiduIdCardFront.setOnClickListener {
             val intent = Intent(this, TakePhotoActivity::class.java)
             intent.putExtra("side", "front")
+            intent.putExtra("source", "wwxjk")
             startActivityForResult(intent, AuthManager.BAIDU_ID_FRONT)
 //            AuthManager.startCamera(this, AuthManager.BAIDU_ID_FRONT) {
 //                filePath = it
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         tv_baiduIdCardBack.setOnClickListener {
             val intent = Intent(this, TakePhotoActivity::class.java)
             intent.putExtra("side", "back")
+            intent.putExtra("source", "wwnt")
             startActivityForResult(intent, AuthManager.BAIDU_ID_BACK)
 //            AuthManager.startCamera(this, AuthManager.BAIDU_ID_BACK) {
 //                filePath = it
