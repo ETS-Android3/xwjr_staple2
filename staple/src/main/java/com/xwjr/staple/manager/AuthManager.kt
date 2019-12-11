@@ -291,9 +291,8 @@ object AuthManager {
      * 处理活体检测数据
      */
     @Suppress("UNCHECKED_CAST")
-    fun dealBaiduLivingData(context: Context, imagesMap: HashMap<String, String>, deal: (imagesMap: MutableMap<String, String>) -> Any) {
+    fun dealBaiduLivingData(imagesMap: HashMap<String, String>, deal: (imagesMap: MutableMap<String, String>) -> Any) {
         try {
-            var imageBest = imagesMap["bestImage0"]
             val imageBestFile = imagesMap["bestImage0"]?:""
             val imagesBackMap: MutableMap<String, String> = mutableMapOf()
             imagesBackMap["image_best"] =  base64ToFile(imageBestFile)
