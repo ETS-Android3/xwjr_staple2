@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.util.Base64
 import com.megvii.idcardlib.IDCardScanActivity
 import com.megvii.idcardlib.util.Util
 import com.megvii.idcardquality.IDCardQualityLicenseManager
@@ -287,6 +288,27 @@ object AuthManager {
 
 
     /**
+     * 处理活体检测数据
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun dealBaiduLivingData(context: Context, imagesMap: HashMap<String, String>, deal: (imagesMap: MutableMap<String, String>) -> Any) {
+        try {
+            var imageBest = imagesMap["bestImage0"]
+            val imageBestFile = imagesMap["bestImage0"]?:""
+            val imagesBackMap: MutableMap<String, String> = mutableMapOf()
+            imagesBackMap["image_best"] =  base64ToFile(imageBestFile)
+            deal(imagesBackMap)
+        } catch (e: JSONException) {
+            showToast("活体检测数据处理失败")
+            e.printStackTrace()
+        } catch (e: Exception) {
+            showToast("活体检测验证数据处理失败")
+            e.printStackTrace()
+        }
+    }
+
+
+    /**
      * 跳转到照相机
      */
     fun Context.gotoCamera(
@@ -367,7 +389,7 @@ object AuthManager {
     /**
      * 扫描身份证获取数据后处理
      */
-    fun dealBaiduIDCardScan( path: String, deal: (filePath: String) -> Any) {
+    fun dealBaiduIDCardScan(path: String, deal: (filePath: String) -> Any) {
         try {
             BitmapUtil.getCompressFile(path).apply {
                 deal(this)
@@ -376,5 +398,44 @@ object AuthManager {
             showToast(" 身份证数据处理异常")
             e.printStackTrace()
         }
+    }
+
+    fun base64ToFile(base64: String):String {
+        val fileName = System.currentTimeMillis().toString() + ".png"
+        val file: File?
+        //创建文件目录
+        val dir = File(StapleConfig.getImgFilePath())
+        if (!dir.exists() && !dir.isDirectory) {
+            dir.mkdirs()
+        }
+        var bos: BufferedOutputStream? = null
+        var fos: FileOutputStream? = null
+        try {
+            val bytes = Base64.decode(base64, Base64.DEFAULT)
+            file = File("${StapleConfig.getImgFilePath()}/$fileName")
+            fos = FileOutputStream(file)
+            bos = BufferedOutputStream(fos)
+            bos.write(bytes)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+            }
+            if (fos != null) {
+                try {
+                    fos.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+        return "${StapleConfig.getImgFilePath()}/$fileName"
     }
 }

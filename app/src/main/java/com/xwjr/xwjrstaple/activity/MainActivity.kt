@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                         if (data == null) {
                             return
                         }
-                        AuthManager.dealBaiduIDCardScan(filePath) {
+                        AuthManager.dealBaiduIDCardScan(data.getStringExtra("filePath")) {
                             authManagerHelper.upLoadBaiduIDCardInfo(
                                     imagePath = it,
                                     side = data.getStringExtra("side"),
