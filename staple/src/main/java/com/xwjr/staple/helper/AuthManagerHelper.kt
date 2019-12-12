@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import com.google.gson.Gson
 import com.xwjr.staple.constant.StapleConfig
 import com.xwjr.staple.constant.StapleHttpUrl
+import com.xwjr.staple.extension.isNotNullOrEmpty
 import com.xwjr.staple.extension.logE
 import com.xwjr.staple.extension.logI
 import com.xwjr.staple.extension.showToast
@@ -186,14 +187,18 @@ class AuthManagerHelper(private val activity: AppCompatActivity) {
     /**
      * 上传活体识别数据
      */
-    fun upLoadLiveData(name: String, idNumber: String, mobile: String, delta: String?, imgMap: MutableMap<String, String>, showProgress: Boolean = false) {
+    fun upLoadLiveData(name: String, idNumber: String, mobile: String, delta: String?, imgMap: MutableMap<String, String>, showProgress: Boolean = false, channel: String?) {
         try {
             if (showProgress) {
                 dialog = ProgressDialogFragment.newInstance(hint = "正在识别...")
                 dialog?.show(activity.supportFragmentManager)
             }
             logI("开始上传活体识别数据...")
-            val url = StapleHttpUrl.upLoadLiveInfo()
+            val url: String = if (channel.isNotNullOrEmpty()) {
+                StapleHttpUrl.upLoadLiveInfo()+"?channel="+channel
+            } else {
+                StapleHttpUrl.upLoadLiveInfo()
+            }
             logI("请求URL:$url")
             val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
             for (key in imgMap.keys) {
