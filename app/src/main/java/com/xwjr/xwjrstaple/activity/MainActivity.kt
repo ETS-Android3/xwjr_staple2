@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
 
                     AuthManager.PAGE_INTO_LIVENESS -> {
                         AuthManager.dealLivingData(this, data!!) { imagesMap, _, delta ->
-                            authManagerHelper.upLoadLiveData("朱小航", "412326199211116919", "18810409404", delta, imagesMap, true)
+                            authManagerHelper.upLoadLiveData("朱小航", "412326199211116919", "18810409404", delta, imagesMap, true,"")
                         }
                     }
                     AuthManager.BAIDU_ID_FRONT -> {

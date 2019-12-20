@@ -31,9 +31,9 @@ object StapleHttpUrl {
      */
     fun getDomainUrl():List<String> {
         return if (StapleConfig.isDebug){
-            arrayListOf("http://p2psp.kfxfd.cn:9080","http://p2p.slowlytime.com:9084")
+            arrayListOf("http://p2psp.kfxfd.cn:9080","http://p2p.slowlytime.com:9084","http://hua.kfxfd.cn")
         }else{
-            arrayListOf("https://www.xwjr.com","http://xiaodai.xwjr.com")
+            arrayListOf("https://www.xwjr.com","http://xiaodai.xwjr.com","https://xjk.xwjr.com","https://api.mloan.xwjr.com")
         }
     }
 
