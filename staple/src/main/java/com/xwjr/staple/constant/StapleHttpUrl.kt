@@ -33,7 +33,7 @@ object StapleHttpUrl {
         return if (StapleConfig.isDebug){
             arrayListOf("http://p2psp.kfxfd.cn:9080","http://p2p.slowlytime.com:9084","http://hua.kfxfd.cn","http://xjk.kfxfd.cn")
         }else{
-            arrayListOf("http://wexin.mloan.xwjr.com","https://www.xwjr.com","http://xiaodai.xwjr.com","https://xjk.xwjr.com","https://api.mloan.xwjr.com","http://hua.xwjr.com")
+            arrayListOf("http://weixin.mloan.xwjr.com","https://www.xwjr.com","http://xiaodai.xwjr.com","https://xjk.xwjr.com","https://api.mloan.xwjr.com","http://hua.xwjr.com")
         }
     }
 
