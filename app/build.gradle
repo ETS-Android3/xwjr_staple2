@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.xwjr.mloan"
+        applicationId "com.xwjr.staple"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 900000
