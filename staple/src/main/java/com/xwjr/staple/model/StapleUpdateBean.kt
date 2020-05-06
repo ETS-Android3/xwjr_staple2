@@ -16,6 +16,7 @@ class StapleUpdateBean :StapleCGBean(){
             var downloadUrl: String? = null
             var forceUpdate: Boolean = false
             var changeLog: String? = null
+            var serial: String? = null
         }
 
         class BundleVersionBean {

@@ -33,7 +33,7 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
 
     private lateinit var httpPresenter: StapleHttpPresenter
     //升级数据
-    private var updateData: StapleUpdateBean.DataBean.NativeVersionBean = StapleUpdateBean.DataBean.NativeVersionBean()
+    var updateData: StapleUpdateBean.DataBean.NativeVersionBean? = null
     //活动数据
     private var activityData: StapleActivityBean = StapleActivityBean()
     //开屏页面延迟时间
@@ -206,7 +206,7 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
                     val updateBean = (Gson().fromJson(data, StapleUpdateBean::class.java))
                     if (updateBean.success) {
                         updateData = updateBean.data?.nativeVersion!!
-                        if (updateData.hasNew && updateData.downloadUrl.isNotNullOrEmpty()) {
+                        if (updateData!!.hasNew && updateData!!.downloadUrl.isNotNullOrEmpty()) {
                             dealUpdateData()
                         } else {
                             //无升级
@@ -301,11 +301,11 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
      * 处理升级相关数据
      */
     private fun dealUpdateData() {
-        logI("是否强制升级：${updateData.forceUpdate}")
+        logI("是否强制升级：${updateData!!.forceUpdate}")
         when (StapleConfig.appSource) {
             StapleConfig.WWXHB -> {
                 UpdateDialogFragmentWWXHB
-                        .newInstance(updateData.forceUpdate, updateData.downloadUrl!!, "V" + updateData.version!!, updateData.changeLog!!).apply {
+                        .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
                             setCancelUpdateListener(object : UpdateDialogFragmentWWXHB.CancelUpdate {
                                 override fun cancel() {
                                     logI("稍后升级")
@@ -317,7 +317,7 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
             }
             StapleConfig.WWXJK -> {
                 UpdateDialogFragmentWWXJK
-                        .newInstance(updateData.forceUpdate, updateData.downloadUrl!!, "V" + updateData.version!!, updateData.changeLog!!).apply {
+                        .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
                             setCancelUpdateListener(object : UpdateDialogFragmentWWXJK.CancelUpdate {
                                 override fun cancel() {
                                     logI("稍后升级")
@@ -329,7 +329,7 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
             }
             else -> {
                 UpdateDialogFragment
-                        .newInstance(updateData.forceUpdate, updateData.downloadUrl!!, "V" + updateData.version!!, updateData.changeLog!!).apply {
+                        .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
                             setCancelUpdateListener(object : UpdateDialogFragment.CancelUpdate {
                                 override fun cancel() {
                                     logI("稍后升级")
