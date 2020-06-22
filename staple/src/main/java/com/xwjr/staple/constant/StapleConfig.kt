@@ -20,6 +20,7 @@ object StapleConfig {
     private val fileDir = Environment.getExternalStorageDirectory().path//下载的apk存储路径
 
     var isDebug = true//是否为debug模式
+    var isDev = true //给测试打包时切换，测试环境：开发-测试环境切换 true - false
     var appSource = ""//app来源
 
     /**

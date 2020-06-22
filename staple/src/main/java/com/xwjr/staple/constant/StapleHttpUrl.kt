@@ -11,7 +11,11 @@ object StapleHttpUrl {
      */
     private fun getBaseUrl(): String {
         return if (StapleConfig.isDebug) {
-            "http://p2psp.kfxfd.cn:9080"
+            if (StapleConfig.isDev) {
+                "http://p2psp.kfxfd.cn:9080"
+            } else {
+                "http://p2psp.qa.kfxfd.cn"
+            }
         } else {
             "https://www.xwjr.com"
         }
@@ -19,7 +23,11 @@ object StapleHttpUrl {
 
     private fun getRiskShieldBaseUrl(): String {
         return if (StapleConfig.isDebug) {
-            "http://p2psp.kfxfd.cn:9080"
+            if (StapleConfig.isDev) {
+                "http://p2psp.kfxfd.cn:9080"
+            } else {
+                "http://p2psp.qa.kfxfd.cn"
+            }
         } else {
             "http://riskshield.xwjr.com"
         }
@@ -29,11 +37,15 @@ object StapleHttpUrl {
     /**
      * 获取webview需要配置域名list
      */
-    fun getDomainUrl():List<String> {
-        return if (StapleConfig.isDebug){
-            arrayListOf("http://p2psp.kfxfd.cn:9080","http://p2p.slowlytime.com:9084","http://hua.kfxfd.cn","http://xjk.kfxfd.cn")
-        }else{
-            arrayListOf("http://weixin.mloan.xwjr.com","https://www.xwjr.com","http://xiaodai.xwjr.com","https://xjk.xwjr.com","https://api.mloan.xwjr.com","https://hua.xwjr.com")
+    fun getDomainUrl(): List<String> {
+        return if (StapleConfig.isDebug) {
+            if (StapleConfig.isDev) {
+                arrayListOf("http://p2psp.kfxfd.cn:9080", "http://hua.kfxfd.cn", "http://xjk.kfxfd.cn")
+            } else {
+                arrayListOf("http://p2psp.qa.kfxfd.cn", "http://hua.qa.kfxfd.cn", "http://xjk.qa.kfxfd.cn")
+            }
+        } else {
+            arrayListOf("http://weixin.mloan.xwjr.com", "https://www.xwjr.com", "http://xiaodai.xwjr.com", "https://xjk.xwjr.com", "https://api.mloan.xwjr.com", "https://hua.xwjr.com")
         }
     }
 
@@ -66,8 +78,8 @@ object StapleHttpUrl {
     /**
      * 风控中心身份识别状态
      */
-    fun queryRiskShieldStep():String{
-        return getRiskShieldBaseUrl() + "/rsapi/verify/steps/MYSELF/" +StapleConfig.getRiskShieldSource()
+    fun queryRiskShieldStep(): String {
+        return getRiskShieldBaseUrl() + "/rsapi/verify/steps/MYSELF/" + StapleConfig.getRiskShieldSource()
     }
 
     /**
