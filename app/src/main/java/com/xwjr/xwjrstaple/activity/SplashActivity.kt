@@ -17,8 +17,4 @@ class SplashActivity : StapleSplashActivity() {
             finish()
         }
     }
-
-    override fun beforeInit(deal: () -> Unit) {
-        deal()
-    }
 }

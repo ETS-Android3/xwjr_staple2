@@ -22,6 +22,7 @@ object StapleConfig {
     var isDebug = true//是否为debug模式
     var isDev = true //给测试打包时切换，测试环境：开发-测试环境切换 true - false
     var appSource = ""//app来源
+    var isNeedBeforeInitDeal = false //在初始化之前是否需要其他操作
 
     /**
      * 根据不同的app处理不同的逻辑

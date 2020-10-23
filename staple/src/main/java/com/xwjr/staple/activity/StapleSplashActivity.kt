@@ -58,7 +58,9 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         setStatusBar()
         initX5Core()
         logI("是否开启了通知权限：" + isNotificationEnabled())
-        dealBeforeInit {
+        if (StapleConfig.isNeedBeforeInitDeal) {
+            //如果需要的话处理完成后需要自行调用 dealPermission()方法
+        } else {
             dealPermission()
         }
         setWindowBackground()
@@ -356,12 +358,5 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         laterDeal(splashTime) {
             customDealActivityData(latestData)
         }
-    }
-
-    //自定义处理数据
-    abstract fun beforeInit(deal: (() -> Unit))
-
-    private fun dealBeforeInit(deal: (() -> Unit)) {
-        beforeInit(deal)
     }
 }
