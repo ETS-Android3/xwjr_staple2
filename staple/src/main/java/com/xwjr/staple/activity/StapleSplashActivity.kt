@@ -32,10 +32,13 @@ import java.util.ArrayList
 abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
 
     private lateinit var httpPresenter: StapleHttpPresenter
+
     //升级数据
     var updateData: StapleUpdateBean.DataBean.NativeVersionBean? = null
+
     //活动数据
     private var activityData: StapleActivityBean = StapleActivityBean()
+
     //开屏页面延迟时间
     private var splashTime = 3000L
 
@@ -55,7 +58,14 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         setStatusBar()
         initX5Core()
         logI("是否开启了通知权限：" + isNotificationEnabled())
-        dealPermission()
+        if (AppStatusUtils.getFirstOpenStatus(this) == "1") {
+            dealPermission()
+        } else {
+            AppStatusUtils.saveFirstOpenStatus(this, "1")
+            dealFirstOpenData {
+                dealPermission()
+            }
+        }
         setWindowBackground()
         AppStatusUtils.saveHaveActivityKilledStatus(this, "")
     }
@@ -78,7 +88,7 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
     /**
      * 处理权限相关
      */
-    private fun dealPermission() {
+    fun dealPermission() {
         val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             arrayOf(Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -351,5 +361,12 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         laterDeal(splashTime) {
             customDealActivityData(latestData)
         }
+    }
+
+    //自定义处理数据
+    abstract fun firstOpenDeal(deal: (() -> Unit))
+
+    private fun dealFirstOpenData(deal: (() -> Unit)) {
+        firstOpenDeal(deal)
     }
 }

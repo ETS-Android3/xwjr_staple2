@@ -47,6 +47,29 @@ public class AppStatusUtils {
 
     }
 
+    //存储activity是否在后台被杀死的状态，
+    public static void saveFirstOpenStatus(Context context, String status) {
+        try {
+            SharedPreferences sp = context.getSharedPreferences("StapleTable", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("firstOpen", status);
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //存储activity是否在后台被杀死的状态，
+    public static String getFirstOpenStatus(Context context) {
+        try {
+            SharedPreferences sp = context.getSharedPreferences("StapleTable", Context.MODE_PRIVATE);
+            return sp.getString("firstOpen", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
 
     //存储activity是否在后台被杀死的状态，
     public static void saveHaveActivityKilledStatus(Context context, String status) {

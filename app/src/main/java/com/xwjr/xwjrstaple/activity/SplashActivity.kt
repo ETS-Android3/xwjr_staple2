@@ -17,4 +17,8 @@ class SplashActivity : StapleSplashActivity() {
             finish()
         }
     }
+
+    override fun firstOpenDeal(deal: () -> Unit) {
+
+    }
 }
