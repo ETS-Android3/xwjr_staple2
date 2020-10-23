@@ -58,13 +58,8 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         setStatusBar()
         initX5Core()
         logI("是否开启了通知权限：" + isNotificationEnabled())
-        if (AppStatusUtils.getFirstOpenStatus(this) == "1") {
+        dealBeforeInit {
             dealPermission()
-        } else {
-            AppStatusUtils.saveFirstOpenStatus(this, "1")
-            dealFirstOpenData {
-                dealPermission()
-            }
         }
         setWindowBackground()
         AppStatusUtils.saveHaveActivityKilledStatus(this, "")
@@ -364,9 +359,9 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
     }
 
     //自定义处理数据
-    abstract fun firstOpenDeal(deal: (() -> Unit))
+    abstract fun beforeInit(deal: (() -> Unit))
 
-    private fun dealFirstOpenData(deal: (() -> Unit)) {
-        firstOpenDeal(deal)
+    private fun dealBeforeInit(deal: (() -> Unit)) {
+        beforeInit(deal)
     }
 }
