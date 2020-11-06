@@ -75,27 +75,31 @@ public class CameraPreview extends SurfaceView implements
 
     // 在surface创建时激发
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.i(TAG, "==surfaceCreated==");
-        if (!CameraUtils.checkCameraHardware(getContext())) {
-            Toast.makeText(getContext(), "摄像头打开失败！", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // 获得Camera对象
-        camera = getCameraInstance();
         try {
-            // 设置用于显示拍照摄像的SurfaceHolder对象
-            camera.setPreviewDisplay(holder);
-        } catch (IOException e) {
+            Log.i(TAG, "==surfaceCreated==");
+            if (!CameraUtils.checkCameraHardware(getContext())) {
+                Toast.makeText(getContext(), "摄像头打开失败！", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // 获得Camera对象
+            camera = getCameraInstance();
+            try {
+                // 设置用于显示拍照摄像的SurfaceHolder对象
+                camera.setPreviewDisplay(holder);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // 释放手机摄像头
+                camera.release();
+                camera = null;
+            }
+            updateCameraParameters();
+            if (camera != null) {
+                camera.startPreview();
+            }
+            setFocus();
+        }catch (Exception e){
             e.printStackTrace();
-            // 释放手机摄像头
-            camera.release();
-            camera = null;
         }
-        updateCameraParameters();
-        if (camera != null) {
-            camera.startPreview();
-        }
-        setFocus();
     }
 
     // 在surface销毁时激发
@@ -366,42 +370,46 @@ public class CameraPreview extends SurfaceView implements
      * @param event
      */
     public void focusOnTouch(MotionEvent event) {
-
-        int[] location = new int[2];
-        RelativeLayout relativeLayout = (RelativeLayout) getParent();
-        relativeLayout.getLocationOnScreen(location);
-
-        Rect focusRect = CameraUtils.calculateTapArea(mFocusView.getWidth(),
-                mFocusView.getHeight(), 1f, event.getRawX(), event.getRawY(),
-                location[0], location[0] + relativeLayout.getWidth(), location[1],
-                location[1] + relativeLayout.getHeight());
-        Rect meteringRect = CameraUtils.calculateTapArea(mFocusView.getWidth(),
-                mFocusView.getHeight(), 1.5f, event.getRawX(), event.getRawY(),
-                location[0], location[0] + relativeLayout.getWidth(), location[1],
-                location[1] + relativeLayout.getHeight());
-
-        Camera.Parameters parameters = camera.getParameters();
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-
-        if (parameters.getMaxNumFocusAreas() > 0) {
-            List<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
-            focusAreas.add(new Camera.Area(focusRect, 1000));
-
-            parameters.setFocusAreas(focusAreas);
-        }
-
-        if (parameters.getMaxNumMeteringAreas() > 0) {
-            List<Camera.Area> meteringAreas = new ArrayList<Camera.Area>();
-            meteringAreas.add(new Camera.Area(meteringRect, 1000));
-
-            parameters.setMeteringAreas(meteringAreas);
-        }
-
         try {
-            camera.setParameters(parameters);
-        } catch (Exception e) {
+            int[] location = new int[2];
+            RelativeLayout relativeLayout = (RelativeLayout) getParent();
+            relativeLayout.getLocationOnScreen(location);
+
+            Rect focusRect = CameraUtils.calculateTapArea(mFocusView.getWidth(),
+                    mFocusView.getHeight(), 1f, event.getRawX(), event.getRawY(),
+                    location[0], location[0] + relativeLayout.getWidth(), location[1],
+                    location[1] + relativeLayout.getHeight());
+            Rect meteringRect = CameraUtils.calculateTapArea(mFocusView.getWidth(),
+                    mFocusView.getHeight(), 1.5f, event.getRawX(), event.getRawY(),
+                    location[0], location[0] + relativeLayout.getWidth(), location[1],
+                    location[1] + relativeLayout.getHeight());
+
+            Camera.Parameters parameters = camera.getParameters();
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+
+            if (parameters.getMaxNumFocusAreas() > 0) {
+                List<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
+                focusAreas.add(new Camera.Area(focusRect, 1000));
+
+                parameters.setFocusAreas(focusAreas);
+            }
+
+            if (parameters.getMaxNumMeteringAreas() > 0) {
+                List<Camera.Area> meteringAreas = new ArrayList<Camera.Area>();
+                meteringAreas.add(new Camera.Area(meteringRect, 1000));
+
+                parameters.setMeteringAreas(meteringAreas);
+            }
+
+            try {
+                camera.setParameters(parameters);
+                camera.autoFocus(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        camera.autoFocus(this);
     }
 
     /**

@@ -21,6 +21,7 @@ public class MyApplication extends Application {
 
         StapleConfig.INSTANCE.setAppSource(StapleConfig.XIAODAI);
         StapleConfig.INSTANCE.setDebug(true);
+        StapleConfig.INSTANCE.setNeedBeforeInitDeal(true);
 
         StapleUserTokenManager.INSTANCE.saveUserToken("0611951a5db444d692e598aa2a412383c0cc679f43a66e25b3af91035f4c494e");
 
