@@ -89,15 +89,17 @@ public class CameraPreview extends SurfaceView implements
             } catch (IOException e) {
                 e.printStackTrace();
                 // 释放手机摄像头
-                camera.release();
-                camera = null;
+                if (camera != null) {
+                    camera.release();
+                    camera = null;
+                }
             }
             updateCameraParameters();
             if (camera != null) {
                 camera.startPreview();
             }
             setFocus();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -106,8 +108,10 @@ public class CameraPreview extends SurfaceView implements
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.i(TAG, "==surfaceDestroyed==");
         // 释放手机摄像头
-        camera.release();
-        camera = null;
+        if (camera != null) {
+            camera.release();
+            camera = null;
+        }
     }
 
     // 在surface的大小发生改变时激发
@@ -407,7 +411,7 @@ public class CameraPreview extends SurfaceView implements
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
