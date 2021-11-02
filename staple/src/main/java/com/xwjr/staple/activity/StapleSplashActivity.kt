@@ -87,19 +87,9 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
      */
     fun dealPermission() {
         val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            arrayOf(Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
+            arrayOf(Manifest.permission.READ_PHONE_STATE)
         } else {
-            arrayOf(Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            arrayOf(Manifest.permission.READ_PHONE_STATE)
         }
         PermissionRequest.getInstance(this)?.requestPermission(object : PermissionListener {
             override fun permissionGranted() {
@@ -119,7 +109,6 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
                 queryUpdateInfo()
                 querySplashInfo()
             }
-
         }, permissions)
     }
 
@@ -147,27 +136,27 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         try {
             StapleSplashBeanManager.clearSplashInfo(this)
             StapleConfig.dealAppSource(
-                    wwxhb = {
-                        setWindowBG(resId = R.mipmap.staple_wwxhb_window_bg)
-                    },
-                    wwxhc = {
-                        setWindowBG(resId = R.mipmap.staple_wwxhc_null_window_bg)
-                    },
-                    xwjr = {
-                        setWindowBG(resId = R.mipmap.staple_xwjr_window_bg)
-                    },
-                    xwb = {
-                        setWindowBG(res = resources.getDrawable(R.mipmap.staple_xwb_window_bg))
-                    },
-                    wwxjk = {
-                        setWindowBG(res = resources.getDrawable(R.mipmap.staple_wwxjk_window_bg))
-                    },
-                    apphub = {
-                        setWindowBG(resId = R.mipmap.staple_apphub_window_bg)
-                    },
-                    xiaodai = {
-                        setWindowBG(resId = R.mipmap.staple_xiaodai_window_bg)
-                    }
+                wwxhb = {
+                    setWindowBG(resId = R.mipmap.staple_wwxhb_window_bg)
+                },
+                wwxhc = {
+                    setWindowBG(resId = R.mipmap.staple_wwxhc_null_window_bg)
+                },
+                xwjr = {
+                    setWindowBG(resId = R.mipmap.staple_xwjr_window_bg)
+                },
+                xwb = {
+                    setWindowBG(res = resources.getDrawable(R.mipmap.staple_xwb_window_bg))
+                },
+                wwxjk = {
+                    setWindowBG(res = resources.getDrawable(R.mipmap.staple_wwxjk_window_bg))
+                },
+                apphub = {
+                    setWindowBG(resId = R.mipmap.staple_apphub_window_bg)
+                },
+                xiaodai = {
+                    setWindowBG(resId = R.mipmap.staple_xiaodai_window_bg)
+                }
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -312,39 +301,39 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
         when (StapleConfig.appSource) {
             StapleConfig.WWXHB -> {
                 UpdateDialogFragmentWWXHB
-                        .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
-                            setCancelUpdateListener(object : UpdateDialogFragmentWWXHB.CancelUpdate {
-                                override fun cancel() {
-                                    logI("稍后升级")
-                                    queryActivityInfo()
-                                }
-                            })
-                            show(supportFragmentManager)
-                        }
+                    .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
+                        setCancelUpdateListener(object : UpdateDialogFragmentWWXHB.CancelUpdate {
+                            override fun cancel() {
+                                logI("稍后升级")
+                                queryActivityInfo()
+                            }
+                        })
+                        show(supportFragmentManager)
+                    }
             }
             StapleConfig.WWXJK -> {
                 UpdateDialogFragmentWWXJK
-                        .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
-                            setCancelUpdateListener(object : UpdateDialogFragmentWWXJK.CancelUpdate {
-                                override fun cancel() {
-                                    logI("稍后升级")
-                                    queryActivityInfo()
-                                }
-                            })
-                            show(supportFragmentManager)
-                        }
+                    .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
+                        setCancelUpdateListener(object : UpdateDialogFragmentWWXJK.CancelUpdate {
+                            override fun cancel() {
+                                logI("稍后升级")
+                                queryActivityInfo()
+                            }
+                        })
+                        show(supportFragmentManager)
+                    }
             }
             else -> {
                 UpdateDialogFragment
-                        .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
-                            setCancelUpdateListener(object : UpdateDialogFragment.CancelUpdate {
-                                override fun cancel() {
-                                    logI("稍后升级")
-                                    queryActivityInfo()
-                                }
-                            })
-                            show(supportFragmentManager)
-                        }
+                    .newInstance(updateData!!.forceUpdate, updateData!!.downloadUrl!!, "V" + updateData!!.version!!, updateData!!.changeLog!!).apply {
+                        setCancelUpdateListener(object : UpdateDialogFragment.CancelUpdate {
+                            override fun cancel() {
+                                logI("稍后升级")
+                                queryActivityInfo()
+                            }
+                        })
+                        show(supportFragmentManager)
+                    }
             }
 
         }
