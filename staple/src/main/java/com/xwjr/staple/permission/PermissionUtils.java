@@ -123,7 +123,7 @@ public class PermissionUtils {
      * 弹出去设置的对话框
      */
     public static void showAlertDialog(final Context context, String permissions) {
-        new AlertDialog.Builder(context).setMessage(String.format("需要%s，请前往设置", permissions))
+        new AlertDialog.Builder(context).setMessage(String.format("%s，请前往设置", permissions))
                 .setPositiveButton("前往设置", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
