@@ -56,7 +56,6 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
     private fun init() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setStatusBar()
-        initX5Core()
         logI("是否开启了通知权限：" + isNotificationEnabled())
         if (StapleConfig.isNeedBeforeInitDeal) {
             //如果需要的话处理完成后需要自行调用 dealPermission()方法
@@ -70,7 +69,7 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
     /**
      * 初始化X5内核
      */
-    private fun initX5Core() {
+     fun initX5Core() {
         QbSdk.setDownloadWithoutWifi(true)
         QbSdk.initX5Environment(this, object : QbSdk.PreInitCallback {
             override fun onCoreInitFinished() {
