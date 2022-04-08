@@ -166,14 +166,14 @@ abstract class StapleSplashActivity : AppCompatActivity(), StapleHttpContract {
     /**
      * 查询升级数据
      */
-    private fun queryUpdateInfo() {
+    fun queryUpdateInfo() {
         httpPresenter.queryUpdateInfo()
     }
 
     /**
      * 查询活动数据
      */
-    private fun queryActivityInfo() {
+    fun queryActivityInfo() {
         httpPresenter.queryActivityInfo()
     }
 
